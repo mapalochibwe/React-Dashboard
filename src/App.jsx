@@ -1,13 +1,29 @@
 import { useState, useEffect } from 'react';
-import { Activity, Sun, Moon, ExternalLink, Globe } from 'lucide-react';
+import { Activity, Sun, Moon, ExternalLink, Globe, Monitor, Tablet, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
 
-// Inline Portfolio Component for seamless integration
+// Interactive Portfolio Showcase with Device Preview Switcher & Collapse Toggle
 function PortfolioSection() {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [viewMode, setViewMode] = useState('desktop'); // 'desktop', 'tablet', 'mobile'
+
+  // Dynamic iframe widths based on active viewport mode
+  const getIframeWidth = () => {
+    switch (viewMode) {
+      case 'mobile':
+        return '375px';
+      case 'tablet':
+        return '768px';
+      case 'desktop':
+      default:
+        return '100%';
+    }
+  };
+
   return (
     <div 
       style={{ 
@@ -15,16 +31,20 @@ function PortfolioSection() {
         border: '1px solid var(--border)', 
         borderRadius: '0.75rem', 
         overflow: 'hidden', 
-        boxShadow: 'var(--shadow)' 
+        boxShadow: 'var(--shadow)',
+        transition: 'all 0.25s ease'
       }}
     >
+      {/* Header with Control Toolbar */}
       <div 
         style={{ 
-          padding: '1rem 1.25rem', 
-          borderBottom: '1px solid var(--border)', 
+          padding: '0.85rem 1.25rem', 
+          borderBottom: isExpanded ? '1px solid var(--border)' : 'none', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
           backgroundColor: 'rgba(0, 0, 0, 0.02)'
         }}
       >
@@ -35,38 +55,129 @@ function PortfolioSection() {
           </h2>
         </div>
 
-        <a 
-          href="https://mmc-builds-spark.lovable.app/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.35rem', 
-            color: 'var(--accent)', 
-            fontSize: '0.85rem', 
-            fontWeight: '500',
-            textDecoration: 'none' 
-          }}
-        >
-          <span>Open Full Site</span>
-          <ExternalLink size={14} />
-        </a>
+        {/* Viewport Switcher Controls (Visible only when expanded) */}
+        {isExpanded && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'var(--bg)', padding: '0.25rem', borderRadius: '0.5rem', border: '1px solid var(--border)' }}>
+            <button
+              onClick={() => setViewMode('desktop')}
+              title="Desktop View (100%)"
+              style={{
+                background: viewMode === 'desktop' ? 'var(--accent-bg)' : 'transparent',
+                color: viewMode === 'desktop' ? 'var(--accent)' : 'var(--text-muted)',
+                border: 'none',
+                borderRadius: '0.35rem',
+                padding: '0.35rem 0.5rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Monitor size={15} />
+            </button>
+            <button
+              onClick={() => setViewMode('tablet')}
+              title="Tablet View (768px)"
+              style={{
+                background: viewMode === 'tablet' ? 'var(--accent-bg)' : 'transparent',
+                color: viewMode === 'tablet' ? 'var(--accent)' : 'var(--text-muted)',
+                border: 'none',
+                borderRadius: '0.35rem',
+                padding: '0.35rem 0.5rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Tablet size={15} />
+            </button>
+            <button
+              onClick={() => setViewMode('mobile')}
+              title="Mobile View (375px)"
+              style={{
+                background: viewMode === 'mobile' ? 'var(--accent-bg)' : 'transparent',
+                color: viewMode === 'mobile' ? 'var(--accent)' : 'var(--text-muted)',
+                border: 'none',
+                borderRadius: '0.35rem',
+                padding: '0.35rem 0.5rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Smartphone size={15} />
+            </button>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <a 
+            href="https://mmc-builds-spark.lovable.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.35rem', 
+              color: 'var(--accent)', 
+              fontSize: '0.85rem', 
+              fontWeight: '500',
+              textDecoration: 'none' 
+            }}
+          >
+            <span>Open Full Site</span>
+            <ExternalLink size={14} />
+          </a>
+
+          {/* Collapse/Expand Toggle Button */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            title={isExpanded ? "Collapse Section" : "Expand Section"}
+            style={{
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0.2rem'
+            }}
+          >
+            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+        </div>
       </div>
 
-      <div style={{ width: '100%', height: '520px', position: 'relative' }}>
-        <iframe
-          src="https://mmc-builds-spark.lovable.app/"
-          title="MMC Portfolio Showcase"
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            display: 'block'
+      {/* Collapsible Content Area */}
+      {isExpanded && (
+        <div 
+          style={{ 
+            width: '100%', 
+            height: '540px', 
+            backgroundColor: 'var(--bg)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: viewMode !== 'desktop' ? '1rem 0' : 0,
+            overflowX: 'auto',
+            transition: 'all 0.3s ease'
           }}
-          loading="lazy"
-        />
-      </div>
+        >
+          <iframe
+            src="https://mmc-builds-spark.lovable.app/"
+            title="MMC Portfolio Showcase"
+            style={{
+              width: getIframeWidth(),
+              height: '100%',
+              border: viewMode !== 'desktop' ? '1px solid var(--border)' : 'none',
+              borderRadius: viewMode !== 'desktop' ? '0.5rem' : '0',
+              boxShadow: viewMode !== 'desktop' ? '0 10px 25px rgba(0,0,0,0.15)' : 'none',
+              transition: 'width 0.3s ease, border-radius 0.3s ease',
+              backgroundColor: '#ffffff'
+            }}
+            loading="lazy"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -228,7 +339,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Live Portfolio Showcase */}
+        {/* Live Portfolio Showcase with Controls */}
         <PortfolioSection />
 
         {/* 2-Column Grid for Milestones & Tasks */}
