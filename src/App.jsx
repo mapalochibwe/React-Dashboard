@@ -201,9 +201,9 @@ export default function App() {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('irene_tasks');
     return saved ? JSON.parse(saved) : [
-      { id: 101, text: "Set up baseline Vite project structure", completed: true },
-      { id: 102, text: "Walk through state flow between components", completed: false },
-      { id: 103, text: "Design next feature component together", completed: false },
+      { id: 101, text: "Set up baseline Vite project structure", completed: true, priority: "Low" },
+      { id: 102, text: "Walk through state flow between components", completed: false, priority: "Medium" },
+      { id: 103, text: "Design next feature component together", completed: false, priority: "High" },
     ];
   });
 
@@ -229,6 +229,7 @@ export default function App() {
   });
 
   const [taskInput, setTaskInput] = useState('');
+  const [priorityInput, setPriorityInput] = useState('Low'); // State for task creation priority
   const [milestoneInput, setMilestoneInput] = useState('');
 
   // Persist states to localStorage
@@ -252,13 +253,23 @@ export default function App() {
   const addTask = (e) => {
     e.preventDefault();
     if (!taskInput.trim()) return;
-    setTasks([...tasks, { id: Date.now(), text: taskInput, completed: false }]);
+    setTasks([...tasks, { id: Date.now(), text: taskInput, completed: false, priority: priorityInput }]);
     setTaskInput('');
+    setPriorityInput('Low'); // Reset selector back to Low after adding
   };
 
   const deleteTask = (id, e) => {
     e.stopPropagation();
     setTasks(tasks.filter(t => t.id !== id));
+  };
+
+  // Change Task Priority (Directly via badge click or selector)
+  const changePriority = (id, newPriority) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task.id === id ? { ...task, priority: newPriority } : task
+      )
+    );
   };
 
   // Milestone Actions
@@ -357,9 +368,12 @@ export default function App() {
             tasks={tasks}
             taskInput={taskInput}
             setTaskInput={setTaskInput}
+            priorityInput={priorityInput}
+            setPriorityInput={setPriorityInput}
             addTask={addTask}
             toggleTask={toggleTask}
             deleteTask={deleteTask}
+            changePriority={changePriority}
           />
         </div>
 
