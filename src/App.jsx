@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Activity } from 'lucide-react';
+import { Activity, Sun, Moon } from 'lucide-react';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
@@ -7,6 +7,21 @@ import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
 
 export default function App() {
+  // Theme State (Default to 'light' or check localStorage)
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('irene_theme') || 'light';
+  });
+
+  // Sync data-theme attribute on <html> element for index.css
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('irene_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('irene_tasks');
     return saved ? JSON.parse(saved) : [
@@ -113,19 +128,35 @@ export default function App() {
   const milestoneProgress = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
 
   return (
-    <div style={{ backgroundColor: '#0f172a', color: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
-      <Header />
+    <div style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', minHeight: '100vh', fontFamily: 'system-ui, sans-serif', transition: 'background-color 0.25s ease, color 0.25s ease' }}>
+      
+      {/* Pass theme props to Header */}
+      <Header theme={theme} toggleTheme={toggleTheme} />
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         {/* Progress Overview Section */}
-        <div style={{ backgroundColor: '#020617', border: '1px solid #1e293b', borderRadius: '0.75rem', padding: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#818cf8' }}>
-            <Activity size={18} />
-            <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#f1f5f9', margin: 0 }}>
-              Overall Progress
-            </h2>
+        <div style={{ backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.25rem', boxShadow: 'var(--shadow)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+              <Activity size={18} />
+              <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
+                Overall Progress
+              </h2>
+            </div>
+
+            {/* Quick Theme Toggle Button */}
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle-btn" 
+              title="Toggle Theme"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+            >
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+              <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+            </button>
           </div>
+
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             <ProgressBar label="Action Items Completed" percentage={taskProgress} />
             <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
