@@ -1,4 +1,4 @@
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Layers } from 'lucide-react';
 
 export default function Header({ theme, toggleTheme }) {
   return (
@@ -20,37 +20,54 @@ export default function Header({ theme, toggleTheme }) {
           alignItems: 'center',
         }}
       >
-        <div style={{ textAlign: 'left' }}>
-          {/* Main Title - Explicitly uses the high-contrast heading variable */}
-          <h1
+        <div style={{ textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Logo Mark */}
+          <div
             style={{
-              color: 'var(--text-h)',
-              fontSize: '1.75rem',
-              fontWeight: '700',
-              margin: 0,
-              letterSpacing: '-0.025em',
+              backgroundColor: 'var(--accent)',
+              color: '#ffffff',
+              padding: '0.5rem',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            Mentorship Workspace
-          </h1>
+            <Layers size={22} />
+          </div>
 
-          {/* Subtitle - Uses muted text color for readable hierarchy */}
-          <p
-            style={{
-              color: 'var(--text)',
-              fontSize: '0.9rem',
-              margin: '0.25rem 0 0 0',
-            }}
-          >
-            Track action items, milestones, and session notes
-          </p>
+          <div>
+            {/* Brand Name */}
+            <h1
+              style={{
+                color: 'var(--text-h)',
+                fontSize: '1.75rem',
+                fontWeight: '700',
+                margin: 0,
+                letterSpacing: '-0.03em',
+                lineHeight: '1.1',
+              }}
+            >
+              Silo
+            </h1>
+
+            {/* Tagline */}
+            <p
+              style={{
+                color: 'var(--text)',
+                fontSize: '0.875rem',
+                margin: '0.2rem 0 0 0',
+              }}
+            >
+              A creative workspace for modern code, design, and execution.
+            </p>
+          </div>
         </div>
 
-        {/* Theme Toggle Button using passed props */}
+        {/* Theme Toggle */}
         {toggleTheme && (
           <button
             onClick={toggleTheme}
-            className="theme-toggle-btn"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -62,10 +79,11 @@ export default function Header({ theme, toggleTheme }) {
               color: 'var(--accent)',
               fontWeight: '600',
               cursor: 'pointer',
+              transition: 'all 0.2s ease',
             }}
           >
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-            <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+            <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
           </button>
         )}
       </div>
