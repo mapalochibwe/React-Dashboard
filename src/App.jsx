@@ -5,7 +5,7 @@ import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
-import PomodoroSection from './components/PomodoroSection';
+import PomodoroTimer from './components/PomodoroTimer'; // <-- Updated import here!
 
 // Interactive Portfolio Showcase with Device Preview Switcher & Collapse Toggle
 function PortfolioSection() {
@@ -355,7 +355,7 @@ export default function App() {
           </div>
 
           {/* Pomodoro Focus Timer Section */}
-          <PomodoroSection />
+          <PomodoroTimer />
 
         </div>
 
