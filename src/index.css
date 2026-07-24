@@ -131,3 +131,64 @@ code {
 .theme-toggle-btn:hover {
   transform: translateY(-1px);
 }
+
+/* Additional Card & Carousel Tokens */
+:root {
+  --bg-card: #ffffff;
+}
+
+[data-theme='dark'] {
+  --bg-card: #1e293b;
+}
+
+/* Badge Styling */
+.badge-orange {
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Carousel Control Buttons */
+.carousel-btn {
+  background: var(--bg-card);
+  color: var(--text-h);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.carousel-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* Dot Navigation */
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.carousel-dot.active {
+  background: var(--accent);
+  width: 24px;
+  border-radius: 4px;
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon } from 'lucide-react';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
+import DesignSpotlight from './components/DesignSpotlight';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
@@ -130,7 +131,7 @@ export default function App() {
   return (
     <div style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', minHeight: '100vh', fontFamily: 'system-ui, sans-serif', transition: 'background-color 0.25s ease, color 0.25s ease' }}>
       
-      {/* Pass theme props to Header */}
+      {/* Header with theme props */}
       <Header theme={theme} toggleTheme={toggleTheme} />
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -162,6 +163,9 @@ export default function App() {
             <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
           </div>
         </div>
+
+        {/* Product Design Showcase Carousel */}
+        <DesignSpotlight />
 
         {/* 2-Column Grid for Milestones & Tasks */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
