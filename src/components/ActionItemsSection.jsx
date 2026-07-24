@@ -8,9 +8,10 @@ export default function ActionItemsSection({
   setPriorityInput,
   addTask, 
   toggleTask, 
-  deleteTask 
+  deleteTask,
+  changePriority // New prop to handle inline priority cycling
 }) {
-  // Color palette for priority badges
+  // Helper to resolve styling
   const getPriorityStyle = (priority) => {
     switch (priority) {
       case 'High':
@@ -20,6 +21,19 @@ export default function ActionItemsSection({
       case 'Low':
       default:
         return { bg: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' };
+    }
+  };
+
+  // Helper to calculate next priority level
+  const getNextPriority = (currentPriority) => {
+    switch (currentPriority) {
+      case 'Low':
+        return 'Medium';
+      case 'Medium':
+        return 'High';
+      case 'High':
+      default:
+        return 'Low';
     }
   };
 
@@ -70,7 +84,7 @@ export default function ActionItemsSection({
           </button>
         </div>
 
-        {/* Priority Selector Pills */}
+        {/* Form Priority Selector Pills */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Priority:</span>
           {['High', 'Medium', 'Low'].map((p) => {
@@ -107,7 +121,8 @@ export default function ActionItemsSection({
           </p>
         ) : (
           tasks.map((item) => {
-            const badge = getPriorityStyle(item.priority || 'Low');
+            const currentPriority = item.priority || 'Low';
+            const badge = getPriorityStyle(currentPriority);
             return (
               <div
                 key={item.id}
@@ -150,7 +165,17 @@ export default function ActionItemsSection({
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '0.5rem' }}>
-                  <span
+                  {/* Clickable Priority Badge */}
+                  <button
+                    type="button"
+                    title="Click to cycle priority"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const nextPriority = getNextPriority(currentPriority);
+                      if (changePriority) {
+                        changePriority(item.id, nextPriority);
+                      }
+                    }}
                     style={{
                       backgroundColor: badge.bg,
                       color: badge.color,
@@ -159,11 +184,13 @@ export default function ActionItemsSection({
                       padding: '0.1rem 0.4rem',
                       fontSize: '0.65rem',
                       fontWeight: '700',
-                      textTransform: 'uppercase'
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      outline: 'none'
                     }}
                   >
-                    {item.priority || 'Low'}
-                  </span>
+                    {currentPriority}
+                  </button>
 
                   <button 
                     onClick={(e) => deleteTask(item.id, e)}
