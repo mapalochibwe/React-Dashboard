@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon } from 'lucide-react';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
-import DesignSpotlight from './components/DesignSpotlight';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
@@ -163,9 +162,6 @@ export default function App() {
             <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
           </div>
         </div>
-
-        {/* Product Design Showcase Carousel */}
-        <DesignSpotlight />
 
         {/* 2-Column Grid for Milestones & Tasks */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
