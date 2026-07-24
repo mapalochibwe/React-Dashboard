@@ -4,6 +4,7 @@ import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
+import JournalSection from './components/JournalSection';
 
 export default function App() {
   const [tasks, setTasks] = useState(() => {
@@ -23,9 +24,23 @@ export default function App() {
     ];
   });
 
+  // Load journal notes from localStorage or default
+  const [notes, setNotes] = useState(() => {
+    const saved = localStorage.getItem('irene_notes');
+    return saved ? JSON.parse(saved) : [
+      {
+        id: 1,
+        date: new Date().toISOString().split('T')[0],
+        topic: "Vite + React Architecture",
+        content: "Configured modular components and set up Git repository tracking."
+      }
+    ];
+  });
+
   const [taskInput, setTaskInput] = useState('');
   const [milestoneInput, setMilestoneInput] = useState('');
 
+  // Persist states to localStorage
   useEffect(() => {
     localStorage.setItem('irene_tasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -34,6 +49,11 @@ export default function App() {
     localStorage.setItem('irene_milestones', JSON.stringify(milestones));
   }, [milestones]);
 
+  useEffect(() => {
+    localStorage.setItem('irene_notes', JSON.stringify(notes));
+  }, [notes]);
+
+  // Task Actions
   const toggleTask = (id) => {
     setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
   };
@@ -50,6 +70,7 @@ export default function App() {
     setTasks(tasks.filter(t => t.id !== id));
   };
 
+  // Milestone Actions
   const cycleMilestoneStatus = (id) => {
     const statusOrder = ["Not Started", "In Progress", "Completed"];
     setMilestones(milestones.map(m => {
@@ -71,6 +92,15 @@ export default function App() {
   const deleteMilestone = (id, e) => {
     e.stopPropagation();
     setMilestones(milestones.filter(m => m.id !== id));
+  };
+
+  // Journal Actions
+  const addNote = (newNote) => {
+    setNotes([newNote, ...notes]);
+  };
+
+  const deleteNote = (id) => {
+    setNotes(notes.filter(n => n.id !== id));
   };
 
   // Progress Calculations
@@ -102,7 +132,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* 2-Column Grid */}
+        {/* 2-Column Grid for Milestones & Tasks */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
           <MilestonesSection 
             milestones={milestones}
@@ -122,6 +152,13 @@ export default function App() {
             deleteTask={deleteTask}
           />
         </div>
+
+        {/* Session Journal Section */}
+        <JournalSection 
+          notes={notes}
+          addNote={addNote}
+          deleteNote={deleteNote}
+        />
 
       </main>
     </div>
