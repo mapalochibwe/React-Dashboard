@@ -5,23 +5,17 @@ import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
-import PomodoroTimer from './components/PomodoroTimer'; // <-- Updated import here!
 
 // Interactive Portfolio Showcase with Device Preview Switcher & Collapse Toggle
 function PortfolioSection() {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [viewMode, setViewMode] = useState('desktop'); // 'desktop', 'tablet', 'mobile'
+  const [viewMode, setViewMode] = useState('desktop');
 
-  // Dynamic iframe widths based on active viewport mode
   const getIframeWidth = () => {
     switch (viewMode) {
-      case 'mobile':
-        return '375px';
-      case 'tablet':
-        return '768px';
-      case 'desktop':
-      default:
-        return '100%';
+      case 'mobile': return '375px';
+      case 'tablet': return '768px';
+      case 'desktop': default: return '100%';
     }
   };
 
@@ -36,7 +30,6 @@ function PortfolioSection() {
         transition: 'all 0.25s ease'
       }}
     >
-      {/* Header with Control Toolbar */}
       <div 
         style={{ 
           padding: '0.85rem 1.25rem', 
@@ -56,7 +49,6 @@ function PortfolioSection() {
           </h2>
         </div>
 
-        {/* Viewport Switcher Controls (Visible only when expanded) */}
         {isExpanded && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'var(--bg)', padding: '0.25rem', borderRadius: '0.5rem', border: '1px solid var(--border)' }}>
             <button
@@ -129,7 +121,6 @@ function PortfolioSection() {
             <ExternalLink size={14} />
           </a>
 
-          {/* Collapse/Expand Toggle Button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             title={isExpanded ? "Collapse Section" : "Expand Section"}
@@ -148,7 +139,6 @@ function PortfolioSection() {
         </div>
       </div>
 
-      {/* Collapsible Content Area */}
       {isExpanded && (
         <div 
           style={{ 
@@ -184,12 +174,10 @@ function PortfolioSection() {
 }
 
 export default function App() {
-  // Theme State (Default to 'light' or check localStorage)
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('irene_theme') || 'light';
   });
 
-  // Sync data-theme attribute on <html> element for index.css
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('irene_theme', theme);
@@ -202,9 +190,9 @@ export default function App() {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('irene_tasks');
     return saved ? JSON.parse(saved) : [
-      { id: 101, text: "Set up baseline Vite project structure", completed: true, priority: "Low" },
+      { id: 101, text: "Set up baseline Vite project structure", completed: true, priority: "High" },
       { id: 102, text: "Walk through state flow between components", completed: false, priority: "Medium" },
-      { id: 103, text: "Design next feature component together", completed: false, priority: "High" },
+      { id: 103, text: "Design next feature component together", completed: false, priority: "Low" },
     ];
   });
 
@@ -216,7 +204,6 @@ export default function App() {
     ];
   });
 
-  // Load journal notes from localStorage or default
   const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem('irene_notes');
     return saved ? JSON.parse(saved) : [
@@ -230,10 +217,9 @@ export default function App() {
   });
 
   const [taskInput, setTaskInput] = useState('');
-  const [priorityInput, setPriorityInput] = useState('Low'); // State for task creation priority
+  const [priorityInput, setPriorityInput] = useState('Medium');
   const [milestoneInput, setMilestoneInput] = useState('');
 
-  // Persist states to localStorage
   useEffect(() => {
     localStorage.setItem('irene_tasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -256,21 +242,11 @@ export default function App() {
     if (!taskInput.trim()) return;
     setTasks([...tasks, { id: Date.now(), text: taskInput, completed: false, priority: priorityInput }]);
     setTaskInput('');
-    setPriorityInput('Low'); // Reset selector back to Low after adding
   };
 
   const deleteTask = (id, e) => {
     e.stopPropagation();
     setTasks(tasks.filter(t => t.id !== id));
-  };
-
-  // Change Task Priority (Directly via badge click or selector)
-  const changePriority = (id, newPriority) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === id ? { ...task, priority: newPriority } : task
-      )
-    );
   };
 
   // Milestone Actions
@@ -318,73 +294,61 @@ export default function App() {
   return (
     <div style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', minHeight: '100vh', fontFamily: 'system-ui, sans-serif', transition: 'background-color 0.25s ease, color 0.25s ease' }}>
       
-      {/* Header with theme props */}
       <Header theme={theme} toggleTheme={toggleTheme} />
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
-        {/* Progress Overview & Focus Timer Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          
-          {/* Progress Overview Section */}
-          <div style={{ backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.25rem', boxShadow: 'var(--shadow)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
-                <Activity size={18} />
-                <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
-                  Overall Progress
-                </h2>
-              </div>
-
-              {/* Quick Theme Toggle Button */}
-              <button 
-                onClick={toggleTheme} 
-                className="theme-toggle-btn" 
-                title="Toggle Theme"
-                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-              >
-                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-                <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-              </button>
+        {/* Progress Overview Section */}
+        <div style={{ backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.25rem', boxShadow: 'var(--shadow)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+              <Activity size={18} />
+              <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
+                Overall Progress
+              </h2>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <ProgressBar label="Action Items Completed" percentage={taskProgress} />
-              <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
-            </div>
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle-btn" 
+              title="Toggle Theme"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+            >
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+              <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+            </button>
           </div>
 
-          {/* Pomodoro Focus Timer Section */}
-          <PomodoroTimer />
-
+          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <ProgressBar label="Action Items Completed" percentage={taskProgress} />
+            <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
+          </div>
         </div>
 
-        {/* Live Portfolio Showcase with Controls */}
+        {/* Live Portfolio Showcase */}
         <PortfolioSection />
 
-        {/* 2-Column Grid for Milestones & Tasks */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          <MilestonesSection 
-            milestones={milestones}
-            milestoneInput={milestoneInput}
-            setMilestoneInput={setMilestoneInput}
-            addMilestone={addMilestone}
-            cycleMilestoneStatus={cycleMilestoneStatus}
-            deleteMilestone={deleteMilestone}
-          />
+        {/* Action Items Section */}
+        <ActionItemsSection 
+          tasks={tasks}
+          taskInput={taskInput}
+          setTaskInput={setTaskInput}
+          priorityInput={priorityInput}
+          setPriorityInput={setPriorityInput}
+          addTask={addTask}
+          toggleTask={toggleTask}
+          deleteTask={deleteTask}
+        />
 
-          <ActionItemsSection 
-            tasks={tasks}
-            taskInput={taskInput}
-            setTaskInput={setTaskInput}
-            priorityInput={priorityInput}
-            setPriorityInput={setPriorityInput}
-            addTask={addTask}
-            toggleTask={toggleTask}
-            deleteTask={deleteTask}
-            changePriority={changePriority}
-          />
-        </div>
+        {/* Milestones Section */}
+        <MilestonesSection 
+          milestones={milestones}
+          milestoneInput={milestoneInput}
+          setMilestoneInput={setMilestoneInput}
+          addMilestone={addMilestone}
+          cycleMilestoneStatus={cycleMilestoneStatus}
+          deleteMilestone={deleteMilestone}
+        />
 
         {/* Session Journal Section */}
         <JournalSection 
