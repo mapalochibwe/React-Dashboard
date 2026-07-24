@@ -1,10 +1,75 @@
 import { useState, useEffect } from 'react';
-import { Activity, Sun, Moon } from 'lucide-react';
+import { Activity, Sun, Moon, ExternalLink, Globe } from 'lucide-react';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
+
+// Inline Portfolio Component for seamless integration
+function PortfolioSection() {
+  return (
+    <div 
+      style={{ 
+        backgroundColor: 'var(--code-bg)', 
+        border: '1px solid var(--border)', 
+        borderRadius: '0.75rem', 
+        overflow: 'hidden', 
+        boxShadow: 'var(--shadow)' 
+      }}
+    >
+      <div 
+        style={{ 
+          padding: '1rem 1.25rem', 
+          borderBottom: '1px solid var(--border)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          backgroundColor: 'rgba(0, 0, 0, 0.02)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+          <Globe size={18} />
+          <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
+            Live Portfolio Showcase
+          </h2>
+        </div>
+
+        <a 
+          href="https://mmc-builds-spark.lovable.app/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.35rem', 
+            color: 'var(--accent)', 
+            fontSize: '0.85rem', 
+            fontWeight: '500',
+            textDecoration: 'none' 
+          }}
+        >
+          <span>Open Full Site</span>
+          <ExternalLink size={14} />
+        </a>
+      </div>
+
+      <div style={{ width: '100%', height: '520px', position: 'relative' }}>
+        <iframe
+          src="https://mmc-builds-spark.lovable.app/"
+          title="MMC Portfolio Showcase"
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            display: 'block'
+          }}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   // Theme State (Default to 'light' or check localStorage)
@@ -162,6 +227,9 @@ export default function App() {
             <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
           </div>
         </div>
+
+        {/* Live Portfolio Showcase */}
+        <PortfolioSection />
 
         {/* 2-Column Grid for Milestones & Tasks */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
