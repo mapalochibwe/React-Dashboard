@@ -1,7 +1,7 @@
-import Carousel from 'nuka-carousel';
+import { useState } from 'react';
 import { Palette, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Exact imports for camelCase filenames with lowercase .jpeg
+// Make sure your filenames in src/assets/ match these exact imports
 import legoBuild from '../assets/legoBuild.jpeg';
 import arduinoBuild from '../assets/arduinoBuild.jpeg';
 
@@ -10,128 +10,156 @@ const designProjects = [
     id: 1,
     title: "Lego Modular Build",
     description: "Iterative physical design and structure prototyping. Explored spatial hierarchy and component modularity.",
+    tags: ["Physical Design", "Prototyping"],
     img: legoBuild, 
   },
   {
     id: 2,
     title: "Arduino Interactive Prototype",
     description: "Physical computing project combining custom hardware logic, sensors, and micro-interaction design.",
+    tags: ["Hardware", "UX/UI"],
     img: arduinoBuild,
   },
   
 ];
 
-const CarouselButton = ({ children, onClick }) => (
-  <button
-    onClick={onClick}
-    style={{
-      background: 'var(--accent-bg)',
-      color: 'var(--accent)',
-      border: `1px solid var(--accent-border)`,
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      margin: '0 10px',
-      backdropFilter: 'blur(4px)',
-      boxShadow: 'var(--shadow)',
-    }}
-  >
-    {children}
-  </button>
-);
-
 export default function DesignSpotlight() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? designProjects.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === designProjects.length - 1 ? 0 : prev + 1));
+  };
+
+  const current = designProjects[currentIndex];
+
   return (
     <div
       style={{
-        backgroundColor: 'var(--bg-card)',
+        backgroundColor: 'var(--bg-card, var(--code-bg))',
         border: '1px solid var(--border)',
-        borderRadius: '12px',
-        padding: '1.5rem',
+        borderRadius: '0.75rem',
+        padding: '1.25rem',
         boxShadow: 'var(--shadow)',
-        marginBottom: '1.5rem',
+        textAlign: 'left',
         transition: 'all 0.25s ease',
-        minHeight: '350px',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-        <div style={{ color: 'var(--accent)', display: 'flex' }}>
-          <Palette size={20} />
+      {/* Header with Nav Controls */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+          <Palette size={18} />
+          <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
+            Design Spotlight
+          </h2>
         </div>
-        <h2 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-h)', margin: 0, letterSpacing: '-0.02em' }}>
-          Design Spotlight
-        </h2>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>
-          My Product Design Portfolio
-        </span>
-      </div>
 
-      <Carousel
-        wrapAround={true}
-        slidesToShow={1}
-        cellSpacing={20}
-        adaptiveHeight={true}
-        renderCenterLeftControls={({ previousSlide }) => (
-          <CarouselButton onClick={previousSlide}><ChevronLeft size={20} /></CarouselButton>
-        )}
-        renderCenterRightControls={({ nextSlide }) => (
-          <CarouselButton onClick={nextSlide}><ChevronRight size={20} /></CarouselButton>
-        )}
-        defaultControlsConfig={{
-          pagingDotsStyle: {
-            fill: 'var(--accent)',
-            margin: '0 5px',
-          },
-        }}
-      >
-        {designProjects.map((project) => (
-          <div
-            key={project.id}
+        {/* Carousel Buttons */}
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button
+            onClick={prevSlide}
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5rem',
+              background: 'var(--accent-bg)',
+              color: 'var(--accent)',
+              border: '1px solid var(--accent-border)',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
               alignItems: 'center',
-              padding: '10px 0 30px 0',
-              minHeight: '220px',
+              justifyContent: 'center',
+              cursor: 'pointer',
             }}
           >
-            <div style={{ width: '100%', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
-              <img
-                src={project.img}
-                alt={project.title}
-                onError={(e) => {
-                  console.error('Image failed to load:', project.img);
-                  e.target.style.display = 'none';
-                  e.target.parentNode.innerHTML = `<div style="padding: 2rem; background: rgba(255,0,0,0.1); color: #ef4444; font-size: 0.8rem; text-align: center;">Image not found in src/assets/. Check filename casing.</div>`;
-                }}
-                style={{
-                  width: '100%',
-                  height: '220px',
-                  objectFit: 'cover',
-                  display: 'block',
-                }}
-              />
-            </div>
-            <div style={{ textAlign: 'left' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-h)', margin: '0 0 0.5rem 0' }}>
-                {project.title}
-              </h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.5', margin: 0 }}>
-                {project.description}
-              </p>
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
-                <span className="badge-orange" style={{ fontSize: '0.75rem' }}>Physical Design</span>
-                <span className="badge-orange" style={{ fontSize: '0.75rem' }}>Prototyping</span>
-              </div>
-            </div>
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={nextSlide}
+            style={{
+              background: 'var(--accent-bg)',
+              color: 'var(--accent)',
+              border: '1px solid var(--accent-border)',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Active Slide Content */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '1.25rem',
+          alignItems: 'center',
+          backgroundColor: 'var(--bg)',
+          padding: '1rem',
+          borderRadius: '0.5rem',
+          border: '1px solid var(--border)',
+        }}
+      >
+        <div style={{ width: '100%', height: '220px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+          <img
+            src={current.img}
+            alt={current.title}
+            onError={() => {
+              console.error('Image broken:', current.img);
+            }}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-h)', margin: '0 0 0.5rem 0' }}>
+            {current.title}
+          </h3>
+          <p style={{ color: 'var(--text)', fontSize: '0.9rem', lineHeight: '1.5', margin: 0 }}>
+            {current.description}
+          </p>
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {current.tags.map((tag, i) => (
+              <span key={i} className="badge-orange" style={{ fontSize: '0.75rem' }}>
+                {tag}
+              </span>
+            ))}
           </div>
+        </div>
+      </div>
+
+      {/* Dots Indicator */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem' }}>
+        {designProjects.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            style={{
+              width: idx === currentIndex ? '18px' : '8px',
+              height: '8px',
+              borderRadius: '4px',
+              backgroundColor: idx === currentIndex ? 'var(--accent)' : 'var(--border)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+          />
         ))}
-      </Carousel>
+      </div>
     </div>
   );
 }
