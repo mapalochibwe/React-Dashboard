@@ -1,32 +1,28 @@
 import Carousel from 'nuka-carousel';
 import { Palette, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// EXAMPLE: Importing images from your assets folder
-// import design1 from '../assets/designs/project-alpha-ui.png';
-// import design2 from '../assets/designs/mobile-app-proto.png';
-// import design3 from '../assets/designs/user-flow-sketch.png';
+// Import local images from src/assets/
+import legoBuild from '../assets/Lego Build.jpeg';
+import arduinoBuild from '../assets/Arduino Build.jpeg';
 
 const designProjects = [
   {
     id: 1,
     title: "Project Alpha: AI Dashboard",
     description: "Designed a clean UI for data visualization tools, focusing on dark mode usability.",
-    // img: design1,
-    img: "https://images.unsplash.com/photo-1618788372246-79faff083792?q=80&w=600&auto=format&fit=crop", // PLACEHOLDER
+    img: legoBuild, 
   },
   {
     id: 2,
     title: "Zenith Mobile App",
     description: "Full end-to-end UX/UI for a minimalist productivity application.",
-    // img: design2,
-    img: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=600&auto=format&fit=crop", // PLACEHOLDER
+    img: arduinoBuild,
   },
   {
     id: 3,
     title: "EcoTrack Design System",
     description: "Built and documented a comprehensive component library for a sustainability platform.",
-    // img: design3,
-    img: "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=600&auto=format&fit=crop", // PLACEHOLDER
+    img: "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=600&auto=format&fit=crop",
   },
 ];
 
@@ -103,7 +99,7 @@ export default function DesignSpotlight() {
               gridTemplateColumns: '1.5fr 1fr',
               gap: '1.5rem',
               alignItems: 'center',
-              padding: '10px 0 30px 0', // Space for dots
+              padding: '10px 0 30px 0',
             }}
           >
             <img
