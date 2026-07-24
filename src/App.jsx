@@ -5,6 +5,7 @@ import ProgressBar from './components/ProgressBar';
 import MilestonesSection from './components/MilestonesSection';
 import ActionItemsSection from './components/ActionItemsSection';
 import JournalSection from './components/JournalSection';
+import PomodoroSection from './components/PomodoroSection';
 
 // Interactive Portfolio Showcase with Device Preview Switcher & Collapse Toggle
 function PortfolioSection() {
@@ -322,32 +323,40 @@ export default function App() {
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
-        {/* Progress Overview Section */}
-        <div style={{ backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.25rem', boxShadow: 'var(--shadow)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
-              <Activity size={18} />
-              <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
-                Overall Progress
-              </h2>
+        {/* Progress Overview & Focus Timer Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+          
+          {/* Progress Overview Section */}
+          <div style={{ backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.25rem', boxShadow: 'var(--shadow)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+                <Activity size={18} />
+                <h2 style={{ fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-h)', margin: 0 }}>
+                  Overall Progress
+                </h2>
+              </div>
+
+              {/* Quick Theme Toggle Button */}
+              <button 
+                onClick={toggleTheme} 
+                className="theme-toggle-btn" 
+                title="Toggle Theme"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+              >
+                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+                <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+              </button>
             </div>
 
-            {/* Quick Theme Toggle Button */}
-            <button 
-              onClick={toggleTheme} 
-              className="theme-toggle-btn" 
-              title="Toggle Theme"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-            >
-              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-              <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <ProgressBar label="Action Items Completed" percentage={taskProgress} />
+              <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
+            </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <ProgressBar label="Action Items Completed" percentage={taskProgress} />
-            <ProgressBar label="Milestones Achieved" percentage={milestoneProgress} />
-          </div>
+          {/* Pomodoro Focus Timer Section */}
+          <PomodoroSection />
+
         </div>
 
         {/* Live Portfolio Showcase with Controls */}
